@@ -867,3 +867,48 @@ function showMessage(elementId, message, type) {
         messageDiv.classList.add('hidden');
     }, 3000);
 }
+// ===== ログイン処理（IDが分からなくても拾う版）=====
+async function handleLoginClick() {
+  try {
+    const screen = document.getElementById("loginScreen");
+    if (!screen) throw new Error("loginScreen が見つかりません");
+
+    const emailEl = screen.querySelector('input[type="email"]');
+    const passEl  = screen.querySelector('input[type="password"]');
+
+    const email = emailEl?.value?.trim();
+    const password = passEl?.value;
+
+    if (!email || !password) {
+      alert("メールアドレスとパスワードを入力してください");
+      return;
+    }
+
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error) throw error;
+
+    // ログイン成功 → メイン画面へ
+    showScreen("mainScreen");
+    alert("ログイン成功");
+  } catch (e) {
+    alert("ログインエラー: " + e.message);
+  }
+}
+
+function wireLoginButton() {
+  const screen = document.getElementById("loginScreen");
+  if (!screen) return;
+
+  // loginScreen内の「ログイン」ボタンを拾う（最初のbuttonを使う）
+  const btn = screen.querySelector("button");
+  if (!btn) return;
+
+  btn.addEventListener("click", (ev) => {
+    ev.preventDefault();
+    handleLoginClick();
+  });
+}
+
+window.addEventListener("DOMContentLoaded", () => {
+  wireLoginButton();
+});
