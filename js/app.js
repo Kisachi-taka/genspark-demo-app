@@ -141,35 +141,41 @@ function setupAdminListeners() {
 }
 
 // ログイン処理
-async function handleLogin(e) {
-    e.preventDefault();
-    
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
-    const errorDiv = document.getElementById('loginError');
-    
-    try {
-        // 社員データを取得
-        const response = await fetch('tables/employees?limit=100');
-        const data = await response.json();
-        
-        // 認証チェック
-        const user = data.data.find(emp => emp.email === email && emp.password === password);
-        
-        if (user) {
-            currentUser = user;
-            localStorage.setItem('currentUser', JSON.stringify(user));
-            showScreen(user.role);
-            errorDiv.classList.add('hidden');
-        } else {
-            errorDiv.textContent = 'メールアドレスまたはパスワードが正しくありません';
-            errorDiv.classList.remove('hidden');
-        }
-    } catch (error) {
-        console.error('Login error:', error);
-        errorDiv.textContent = 'ログインに失敗しました';
-        errorDiv.classList.remove('hidden');
-    }
+async function loginWithSupabase(e) {
+  e.preventDefault();
+
+  const emailEl = document.getElementById("email");
+  const passEl  = document.getElementById("password");
+
+  if (!emailEl || !passEl) {
+    alert("ログイン画面の input(id=email / id=password) が見つかりません。index.htmlのIDを確認してください。");
+    return;
+  }
+
+  const email = emailEl.value.trim();
+  const password = passEl.value;
+
+  const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+
+  if (error) {
+    alert("ログイン失敗: " + error.message);
+    return;
+  }
+
+  // 成功 → mainScreenへ
+  showScreen("mainScreen");
+}
+
+// loginScreen内のフォームに紐づけ
+window.addEventListener("DOMContentLoaded", () => {
+  const loginForm = document.querySelector("#loginScreen form");
+  if (!loginForm) {
+    alert("ログインフォームが見つかりません（#loginScreen form）。index.htmlを確認してください。");
+    return;
+  }
+  loginForm.addEventListener("submit", loginWithSupabase);
+});
+
 }
 
 // ログアウト処理
@@ -180,10 +186,13 @@ function handleLogout() {
 }
 
 // 画面表示切り替え
-function showScreen(role) {
-    document.getElementById('loginScreen').classList.add('hidden');
-    document.getElementById('mainScreen').classList.add('hidden');
-    document.getElementById('adminScreen').classList.add('hidden');
+function showScreen(id) {
+  document.getElementById("loginScreen")?.classList.add("hidden");
+  document.getElementById("mainScreen")?.classList.add("hidden");
+  document.getElementById("adminScreen")?.classList.add("hidden");
+  document.getElementById(id)?.classList.remove("hidden");
+}
+
     
     if (role === 'admin') {
         document.getElementById('adminScreen').classList.remove('hidden');
