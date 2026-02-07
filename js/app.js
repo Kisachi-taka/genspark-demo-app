@@ -1,3 +1,17 @@
+// ===== Supabase 初期化（app.jsの一番上に置く）=====
+const SUPABASE_URL = "https://vhnshcsfucefikbxhuxx.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_ZQNSoFRd8Yhw5Qt6WBM2HA_nEjb1214";
+
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// 画面切り替え（あなたのDOMに合わせた最小）
+function showScreen(screenId) {
+  document.getElementById("loginScreen")?.classList.add("hidden");
+  document.getElementById("mainScreen")?.classList.add("hidden");
+  document.getElementById("adminScreen")?.classList.add("hidden");
+  document.getElementById(screenId)?.classList.remove("hidden");
+}
+
 // グローバル変数
 let currentUser = null;
 
