@@ -1,4 +1,4 @@
-
+// ===== Supabase 初期化（app.jsの先頭）=====
 const SUPABASE_URL = "https://vhnshcsfucefikbxhuxx.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_ZQNSoFRd8Yhw5Qt6WBM2HA_nEjb1214";
 
