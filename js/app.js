@@ -203,7 +203,7 @@ function showScreen(id) {
         setupEmployeeListeners();
         loadKpiData();
     }
-}
+
 
 function showLoginScreen() {
     document.getElementById('loginScreen').classList.remove('hidden');
