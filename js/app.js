@@ -176,13 +176,11 @@ window.addEventListener("DOMContentLoaded", () => {
   loginForm.addEventListener("submit", loginWithSupabase);
 });
 
-}
-
 // ログアウト処理
 function handleLogout() {
-    currentUser = null;
-    localStorage.removeItem('currentUser');
-    showLoginScreen();
+  currentUser = null;
+  localStorage.removeItem('currentUser');
+  showLoginScreen();
 }
 
 // 画面表示切り替え
